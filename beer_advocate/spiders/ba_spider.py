@@ -9,32 +9,17 @@ class BeerAdvocateSpider(Spider):
     
     
     def parse(self, response):
-        # Find the total number of pages in the result so that we can decide how many pages to scrape next
-        #text = response.xpath('//div[@class="mainContent"]//span/b/text()').extract_first()
-        #_, per_page, total = map(lambda x: int(x), re.findall('\d+', text))
-        # number_pages = total // per_page
-        # List comprehension to construct all the urls
         result_urls = ['https://www.beeradvocate.com/place/list/?start={}&&c_id=US&s_id=NY&brewery=Y&sort=name'.format(x) for x in range(0,460,20)]
-        # Yield the requests to different search result urls, 
-        # using parse_result_page function to parse the response.
         for result_url in result_urls:
             yield Request(url=result_url, callback=self.parse_result_page)
 
 
 
     def parse_result_page(self, response):
-        # This fucntion parses the search result page.
-        # We are looking for url of the detail page.
-        #table = response.xpath('path')
-        #rows = table.xpath('.//tr')
-        #for i in range(4,len(rows),2):
-            #row = rows[i]
         brewery_urls = ['//div[@id="ba-content"]/table/tr[{}]/td[1]/a/@href'.format(i) for i in range(4,43,2)]
         print(len(brewery_urls))
         print('=' * 50)
         print(brewery_urls)
-        # Yield the requests to the details pages, 
-        # using parse_detail_page function to parse the response.
         for brewery_url in brewery_urls:
             print(response.xpath(brewery_url).extract_first())
             yield Request(url='https://www.beeradvocate.com' + response.xpath(brewery_url).extract_first(), callback=self.parse_table_page)
