@@ -54,6 +54,4 @@ ny_top100_plus = ny_beer %>%
   head(100)
 View(ny_top100_plus)
   
-#scatter abv vs ba_score
-#top100 before and after
-#show avg_by_style (bar graph?)
+
