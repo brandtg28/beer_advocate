@@ -1,6 +1,10 @@
 library(dplyr)
 library(ggplot2)
 library(tidyverse)
+library(plotly)
+
+nybeer2 = read.csv('ba_all_ny.csv', stringsAsFactors = FALSE)
+unique(nybeer2$style)
 
 #read csv, filter # of ratings > 10
 ny_beer = read.csv('ba_all_ny.csv', stringsAsFactors = FALSE)
@@ -48,10 +52,29 @@ ny_top100 = ny_beer %>%
   arrange(., desc(ba_score)) %>% 
   head(100)
 
-
 ny_top100_plus = ny_beer %>% 
   arrange(., desc(ba_plus)) %>% 
   head(100)
 View(ny_top100_plus)
-  
 
+ny_top25 = ny_beer %>% 
+  arrange(., desc(ba_score)) %>% 
+  head(25)
+
+ny_top25_plus = ny_beer %>% 
+  arrange(., desc(ba_plus)) %>% 
+  head(25)
+View(ny_top25_plus)
+
+
+#total of each style  
+type_count = ny_beer %>% group_by(style) %>% tally()
+View(type_count)
+
+#saving tables for presentation
+install.packages("gridExtra")
+library(gridExtra)
+png("test.png", height=1000, width=200)
+r<-tableGrob(ny_top25_plus)
+grid.arrange(r)
+dev.off()
